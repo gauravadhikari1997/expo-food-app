@@ -1,20 +1,14 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import zomato from "../api/zomato";
 
+import useResult from "../hooks/useResult";
 import SearchBar from "../components/SearchBar";
 
 const styles = StyleSheet.create({});
 
 const SearchScreen = () => {
   const [searchTerm, setSearchTerm] = useState("");
-
-  const searchApi = async (searchTerm) => {
-    const response = await zomato.get(
-      `/search?entity_id=4&entity_type=city&q=dominos`
-    );
-    console.log(response.data);
-  };
+  const [result, errorMessage, searchApi] = useResult();
 
   return (
     <View>
@@ -23,7 +17,8 @@ const SearchScreen = () => {
         setSearchTerm={setSearchTerm}
         onSearchTermSubmit={() => searchApi(searchTerm)}
       />
-      <Text>{searchTerm}</Text>
+      {errorMessage ? <Text>{errorMessage}</Text> : null}
+      <Text>We have found {result.length} results</Text>
     </View>
   );
 };
